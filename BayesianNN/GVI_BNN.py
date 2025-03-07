@@ -142,13 +142,22 @@ def make_functions(d, shapes, alpha, Dtype="AR",
         produces (stochastic) predictions from BNN by sampling from
         the variational posterior q, given a set of inputs X.
     """
-    def predict_deprecated(samples_q, X):
+    def predict(samples_q, X):
 
         # First layer
         K = samples_q.shape[ 0 ]
         (m, n) = shapes[ 0 ]
-        W = samples_q[ : , : m * n ].reshape(n * K, m).T
-        print(W.shape)
+
+        # print('shapes', shapes)
+        # print('m', m)
+        # print('n', n)
+        # print('K', K)
+        # print('X shape', X.shape)
+        # print('samples_q shape', samples_q.shape)
+
+        # print('samples_q[ : , : m * n ]', samples_q[ : , : m * n ].shape)
+
+        W = samples_q[ : , : m * n ].reshape((n * K, m)).T
         b = samples_q[ : , m * n : m * n + n ].reshape(1, n * K)
         a = np.dot(X, W) + b
         h = np.maximum(a, 0)
@@ -161,31 +170,32 @@ def make_functions(d, shapes, alpha, Dtype="AR",
         a = np.sum((samples_q[ : , : m * n ].reshape(1, -1) * h).reshape((K * X.shape[ 0 ], m)), 1).reshape((X.shape[ 0 ], K)) + b
 
         return a
+    
 
-    def predict(samples_q, X):
-        # First layer
-        K = samples_q.shape[0]  # Number of samples
-        m, n = shapes[0]  # Input dimension (m) and hidden dimension (n)
+    # def predict_bis(samples_q, X):
+    #     # First layer
+    #     K = samples_q.shape[0]  # Number of samples
+    #     m, n = shapes[0]  # Input dimension (m) and hidden dimension (n)
 
-        # Reshape weights and biases for the first layer
-        W1 = np.reshape(samples_q[:, :m * n], (K, m, n))  # Weights for the first layer
-        b1 = np.reshape(samples_q[:, m * n:m * n + n], (K, 1, n))  # Biases for the first layer
+    #     # Reshape weights and biases for the first layer
+    #     W1 = np.reshape(samples_q[:, :m * n], (K, m, n))  # Weights for the first layer
+    #     b1 = np.reshape(samples_q[:, m * n:m * n + n], (K, 1, n))  # Biases for the first layer
 
-        # Compute the first layer's output for each sample
-        a1 = np.einsum('ij,kjl->kil', X, W1) + b1  # Shape: (K, X.shape[0], n)
-        h = np.maximum(a1, 0)  # Apply ReLU activation
+    #     # Compute the first layer's output for each sample
+    #     a1 = np.einsum('ij,kjl->kil', X, W1) + b1  # Shape: (K, X.shape[0], n)
+    #     h = np.maximum(a1, 0)  # Apply ReLU activation
 
-        # Second layer
-        samples_q = samples_q[:, m * n + n:]  # Remaining samples for the second layer
-        m, n = shapes[1]  # Hidden dimension (m) and output dimension (n)
+    #     # Second layer
+    #     samples_q = samples_q[:, m * n + n:]  # Remaining samples for the second layer
+    #     m, n = shapes[1]  # Hidden dimension (m) and output dimension (n)
 
-        # Reshape weights and biases for the second layer
-        W2 = np.reshape(samples_q[:, :m * n], (K, m, n))  # Weights for the second layer
-        b2 = np.reshape(samples_q[:, m * n:m * n + n], (K, 1, n))  # Biases for the second layer
+    #     # Reshape weights and biases for the second layer
+    #     W2 = np.reshape(samples_q[:, :m * n], (K, m, n))  # Weights for the second layer
+    #     b2 = np.reshape(samples_q[:, m * n:m * n + n], (K, 1, n))  # Biases for the second layer
 
-        a2 = np.einsum('kij,kjl->kil', h, W2) + b2
+    #     a2 = np.einsum('kij,kjl->kil', h, W2) + b2
 
-        return a2
+    #     return a2
 
     """UNIVERSAL. 
         produces the relevant (pseudo) likelihooods depending on the specified
@@ -411,6 +421,3 @@ def make_functions(d, shapes, alpha, Dtype="AR",
     
 
     return w, energy, get_error_and_ll, get_predictive_distribution
-
-
-
