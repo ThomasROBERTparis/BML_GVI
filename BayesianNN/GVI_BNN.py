@@ -346,6 +346,12 @@ def make_functions(d, shapes, alpha, Dtype="AR",
             KL = np.sum(-0.5 * np.log(2 * math.pi * v_prior) - 0.5 * ((q[ 'm' ]-m_prior)**2 + q[ 'v' ]) / v_prior) - \
                 np.sum(-0.5 * np.log(2 * math.pi * q[ 'v' ] * np.exp(1)))
             vfe = -(np.mean(log_factor_value) + KL)
+
+        if Dtype == "w-1KL":
+            """I.e., weighted standard VI"""
+            KL = np.sum(-0.5 * np.log(2 * math.pi * v_prior) - 0.5 * ((q[ 'm' ]-m_prior)**2 + q[ 'v' ]) / v_prior) - \
+                np.sum(-0.5 * np.log(2 * math.pi * q[ 'v' ] * np.exp(1)))
+            vfe = -(np.mean(log_factor_value) + (1/alpha) * KL)
             
         elif Dtype == "AR-approx":
             """NOTE: Needs modification to be GVI"""

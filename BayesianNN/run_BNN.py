@@ -257,7 +257,7 @@ if __name__ == '__main__':
         loss_hyperparam = -0.25
     
     """Sanity check III: Make sure Dtype is admissible"""
-    Dtypes = ["KL", "AR", "A", "A-approx", "AR-approx", "AB-approx"]
+    Dtypes = ["KL", "AR", "A", "A-approx", "AR-approx", "AB-approx", "w-1KL"]
     if Dtype not in Dtypes:
         print("ERROR! You specified an invalid argument for Dtype! Has to be one of ")
         print(Dtypes)
@@ -305,6 +305,10 @@ if __name__ == '__main__':
               "forced your alpha parameter too be -99!")
         print('\n')
         alpha = -99
+    
+    if Dtype == 'w-1KL' :
+        print("You selected Dtype=w-1KL. Alpha will be used to set the w parameter")
+        print('\n')
     
     if split_num is None:
         n_splits = 25
