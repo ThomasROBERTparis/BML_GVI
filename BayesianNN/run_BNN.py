@@ -134,7 +134,7 @@ def main(split_num, dataset, alpha, learning_rate, epochs, Dtype, losstype,
     #You can specify a selection of indices for the data splits, a single split
     #or None (in which case all splits are run)
     if split_num is None:
-        n_splits = 50
+        n_splits = 25
         splits = range(n_splits)
     elif type(split_num) == int:
         splits = np.array([split_num])
@@ -307,7 +307,7 @@ if __name__ == '__main__':
         alpha = -99
     
     if split_num is None:
-        n_splits = 50
+        n_splits = 25
         splits = range(n_splits)
     else:
         splits = split_num
