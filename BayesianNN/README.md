@@ -1,3 +1,5 @@
+Additional hyperparameters from the student project are mentioned <span style="color:blue;">in blue</span>.
+
 # Generalized Variational Inference for Bayesian Neural Nets
 
 This code is a merged and strongly modified version of the code repos build by Li & Turner '16 and Hernandez-Lobato et al. '16. 
